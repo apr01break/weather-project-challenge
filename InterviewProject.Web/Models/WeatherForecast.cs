@@ -1,6 +1,6 @@
 using System;
 
-namespace InterviewProject
+namespace InterviewProject.Models
 {
     public class WeatherForecast
     {
