@@ -5,11 +5,22 @@ export class Weather extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { forecasts: [], loading: true };
+    this.state = { 
+      show: false, 
+      forecasts: [], 
+      city: '', 
+      country: '', 
+      loading: true, 
+      searchText: ''
+    };
   }
 
   componentDidMount() {
-    this.populateWeatherData();
+    
+  }
+
+  handleSearchChange = (event) => {
+    this.setState({ searchText: event.target.value });
   }
 
   static renderForecastsTable(forecasts) {
@@ -46,14 +57,45 @@ export class Weather extends Component {
       <div>
         <h1 id="tabelLabel" >Weather forecast</h1>
         <p>This component demonstrates fetching data from the server.</p>
-        {contents}
+        <input type='text' 
+          value={this.state.searchText}
+          placeholder='Enter search text'
+          onChange={this.handleSearchChange}/>
+        <button onClick={this.populateWeatherData}>Search</button>
+        <h3><span>{this.state.city}</span> - <span>{this.state.country}</span></h3>
+        { this.state.show ? contents : null }
       </div>
     );
   }
 
-  async populateWeatherData() {
-    const response = await fetch('weatherforecast');
+  populateWeatherData = async () => {
+    if (this.state.searchText.trim() == '') {
+      alert("Enter search text");
+      return;
+    }
+    this.setState({ 
+      loading: true,
+      show: true,
+      city: '',
+      country: ''
+    });
+    const response = await fetch(`weatherforecast/search?text=${this.state.searchText}`);
+    if (!response.ok) {
+      this.setState({
+        forecasts: [],
+        city: '',
+        loading: false,
+        show: false
+      });
+      alert("City not found")
+      return;
+    }
     const data = await response.json();
-    this.setState({ forecasts: data, loading: false });
+    this.setState({ 
+      forecasts: data.forecasts,
+      city: data.city,
+      country: data.country,
+      loading: false
+    });
   }
 }
