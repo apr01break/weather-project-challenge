@@ -43,7 +43,7 @@ namespace InterviewProject.Controllers
 
         [HttpGet]
         [Route("search")]
-        public async Task<IActionResult> Search(string text)
+        public async Task<IActionResult> Search([FromQuery]string text)
         {
             try
             {
