@@ -1,4 +1,6 @@
 using System.IO;
+using System.Net.Http;
+using InterviewProject.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,6 +25,8 @@ namespace InterviewProject
         {
 
             services.AddControllersWithViews();
+            services.AddScoped<IWeatherService, WeatherService>();
+            services.AddScoped<HttpClient>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
